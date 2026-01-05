@@ -1,0 +1,65 @@
+// Theme variables
+// Light Theme
+$light-bg: #F5F4FA;
+$light-primary: #692FFF;
+$light-secondary: #C146FE;
+$light-accent: #FFC846;
+$light-info: #56D7FF;
+$light-success: #0DD0E7;
+$light-danger: #A92B2B;
+$light-text: #1A1A2E;
+$light-text-secondary: #6B6B80;
+
+// Dark Theme
+$dark-bg: #181824;
+$dark-primary: #7945FF;
+$dark-secondary: #D173FF;
+$dark-accent: #FFD675;
+$dark-info: #86E0FC;
+$dark-success: #0FD9F1;
+$dark-danger: #C53C3C;
+$dark-text: #F0F0F5;
+$dark-text-secondary: #A0A0B0;
+
+:root {
+  // Light theme (default)
+  --bg-color: #{$light-bg};
+  --primary-color: #{$light-primary};
+  --secondary-color: #{$light-secondary};
+  --accent-color: #{$light-accent};
+  --info-color: #{$light-info};
+  --success-color: #{$light-success};
+  --danger-color: #{$light-danger};
+  --text-color: #{$light-text};
+  --text-secondary: #{$light-text-secondary};
+  
+  // Transitions
+  --transition-fast: 0.15s ease;
+  --transition-normal: 0.3s ease;
+  
+  // Spacing
+  --spacing-xs: 4px;
+  --spacing-sm: 8px;
+  --spacing-md: 16px;
+  --spacing-lg: 24px;
+  --spacing-xl: 32px;
+  
+  // Border radius
+  --radius-sm: 4px;
+  --radius-md: 8px;
+  --radius-lg: 16px;
+  --radius-xl: 24px;
+}
+
+// Dark theme
+.app_dark_theme {
+  --bg-color: #{$dark-bg};
+  --primary-color: #{$dark-primary};
+  --secondary-color: #{$dark-secondary};
+  --accent-color: #{$dark-accent};
+  --info-color: #{$dark-info};
+  --success-color: #{$dark-success};
+  --danger-color: #{$dark-danger};
+  --text-color: #{$dark-text};
+  --text-secondary: #{$dark-text-secondary};
+}

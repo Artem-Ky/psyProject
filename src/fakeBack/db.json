@@ -1,0 +1,16 @@
+{
+  "users": [
+    {
+      "id": 1,
+      "name": "Пользователь 1",
+      "email": "user1@example.com"
+    }
+  ],
+  "settings": [
+    {
+      "id": 1,
+      "key": "theme",
+      "value": "light"
+    }
+  ]
+}
