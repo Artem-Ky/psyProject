@@ -1,9 +1,11 @@
 import { configureStore } from '@reduxjs/toolkit'
 import settingsReducer from './settingsSlice'
+import repetitionGameReducer from './repetitionGameSlice'
 
 export const store = configureStore({
   reducer: {
     settings: settingsReducer,
+    repetitionGame: repetitionGameReducer,
   },
 })
 

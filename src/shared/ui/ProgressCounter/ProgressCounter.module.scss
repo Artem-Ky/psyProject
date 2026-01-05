@@ -1,0 +1,21 @@
+.counter {
+  display: inline-flex;
+  align-items: baseline;
+  font-family: monospace;
+  font-size: 1.25rem;
+  color: var(--text-color);
+}
+
+.current {
+  font-weight: 700;
+  color: var(--primary-color);
+}
+
+.separator {
+  margin: 0 2px;
+  color: var(--text-secondary);
+}
+
+.total {
+  color: var(--text-secondary);
+}
