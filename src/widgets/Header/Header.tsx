@@ -1,5 +1,6 @@
 import { Link, useNavigate } from 'react-router-dom'
 import { Menu, MenuButton, MenuItems, MenuItem } from '@headlessui/react'
+import { ThemeSwitcher } from '@features/ThemeSwitcher'
 import styles from './Header.module.scss'
 
 export const Header = () => {
@@ -30,6 +31,8 @@ export const Header = () => {
             </MenuItem>
           </MenuItems>
         </Menu>
+        
+        <ThemeSwitcher className={styles.headerThemeSwitcher} />
       </nav>
     </header>
   )

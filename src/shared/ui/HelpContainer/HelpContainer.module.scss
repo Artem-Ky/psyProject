@@ -84,6 +84,7 @@
   flex-direction: column;
   animation: slideUpDrawer 0.3s ease;
   touch-action: none;
+  overflow-x: hidden;
 }
 
 .drawerHandle {
@@ -116,13 +117,14 @@
 
 .drawerContent {
   flex: 1;
-  padding: 0 var(--spacing-lg);
+  padding: 0 var(--spacing-sm);
+  overflow-x: hidden;
   overflow-y: auto;
   -webkit-overflow-scrolling: touch;
 }
 
 .drawerFooter {
-  padding: var(--spacing-lg);
+  padding: var(--spacing-sm);
   padding-top: var(--spacing-md);
   padding-bottom: 32px;
 }

@@ -1,5 +1,6 @@
 import { useEffect, useCallback, useState } from 'react'
-import { DndContext, type DragEndEvent, useSensor, useSensors, PointerSensor, TouchSensor } from '@dnd-kit/core'
+import { DndContext, type DragEndEvent, useSensor, useSensors, PointerSensor, TouchSensor, type DragStartEvent } from '@dnd-kit/core'
+import { isMobile } from 'react-device-detect'
 import { useAppDispatch, useAppSelector } from '@app/store/hooks'
 import {
   setTopic,
@@ -61,11 +62,23 @@ export const RepetitionGamePage = () => {
     }),
     useSensor(TouchSensor, {
       activationConstraint: {
-        delay: 100,
-        tolerance: 10,
+        delay: 0,
+        tolerance: 5,
       },
     })
   )
+
+  const handleDragStart = useCallback((_event: DragStartEvent) => {
+    if (isMobile) {
+      document.body.classList.add('dragging')
+    }
+  }, [])
+
+  const handleDragCancel = useCallback(() => {
+    if (isMobile) {
+      document.body.classList.remove('dragging')
+    }
+  }, [])
 
   const currentTerm = terms[currentIndex]
   const totalTerms = terms.length
@@ -101,11 +114,16 @@ export const RepetitionGamePage = () => {
   }
 
   const handleDragEnd = useCallback((event: DragEndEvent) => {
-    const { delta } = event
+    if (isMobile) {
+      document.body.classList.remove('dragging')
+    }
     
-    if (delta.x > 100) {
+    const { delta } = event
+    const threshold = isMobile ? 80 : 100
+    
+    if (delta.x > threshold) {
       handleCorrect()
-    } else if (delta.x < -100) {
+    } else if (delta.x < -threshold) {
       handleIncorrect()
     }
   }, [handleCorrect, handleIncorrect])
@@ -142,7 +160,12 @@ export const RepetitionGamePage = () => {
               hasIncorrect={incorrectAnswers.length > 0}
             />
           ) : currentTerm ? (
-            <DndContext sensors={sensors} onDragEnd={handleDragEnd}>
+            <DndContext 
+              sensors={sensors} 
+              onDragStart={handleDragStart}
+              onDragEnd={handleDragEnd}
+              onDragCancel={handleDragCancel}
+            >
               <div className={styles.gameHeader}>
                 <RepetitionGameHelp />
                 <ProgressCounter

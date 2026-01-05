@@ -20,6 +20,13 @@ body {
   color: var(--text-color);
   overflow-x: hidden;
   overscroll-behavior-x: none;
+  
+  &.dragging {
+    overflow: hidden !important;
+    touch-action: none !important;
+    position: fixed;
+    width: 100%;
+  }
 }
 
 a {

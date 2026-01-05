@@ -1,6 +1,7 @@
 import { useState, useEffect } from 'react'
 import { useDraggable } from '@dnd-kit/core'
 import { CSS } from '@dnd-kit/utilities'
+import { isMobile } from 'react-device-detect'
 import cn from 'classnames'
 import styles from './TermCard.module.scss'
 
@@ -35,9 +36,27 @@ export const TermCard = ({
     onDragStateChange?.(isDragging)
   }, [isDragging, onDragStateChange])
 
-  const rotation = Math.min(Math.max(dragDelta.x / 10, -45), 45)
+  useEffect(() => {
+    if (isMobile && isDragging) {
+      document.body.style.overflow = 'hidden'
+      document.body.style.touchAction = 'none'
+    } else {
+      document.body.style.overflow = ''
+      document.body.style.touchAction = ''
+    }
+    
+    return () => {
+      document.body.style.overflow = ''
+      document.body.style.touchAction = ''
+    }
+  }, [isDragging])
+
+  const rotationFactor = isMobile ? 15 : 10
+  const rotation = Math.min(Math.max(dragDelta.x / rotationFactor, -45), 45)
   
-  const swipeDirection = dragDelta.x > 50 ? 'right' : dragDelta.x < -50 ? 'left' : null
+  const threshold = isMobile ? 40 : 50
+  const swipeDirection = dragDelta.x > threshold ? 'right' : dragDelta.x < -threshold ? 'left' : null
+  const swipeProgress = Math.min(Math.abs(dragDelta.x) / 100, 1)
 
   const style = transform
     ? {
@@ -47,7 +66,7 @@ export const TermCard = ({
     : undefined
 
   return (
-    <div className={styles.cardWrapper}>
+    <div className={cn(styles.cardWrapper, { [styles.mobile]: isMobile })}>
       <div
         ref={setNodeRef}
         className={cn(styles.card, {
@@ -69,7 +88,21 @@ export const TermCard = ({
           </div>
         </div>
         
-        {swipeDirection && (
+        {isMobile && isDragging && swipeDirection && (
+          <div 
+            className={cn(styles.mobileOverlay, {
+              [styles.overlayRight]: swipeDirection === 'right',
+              [styles.overlayLeft]: swipeDirection === 'left',
+            })}
+            style={{ opacity: swipeProgress }}
+          >
+            <span className={styles.overlayIcon}>
+              {swipeDirection === 'right' ? '✓' : '✗'}
+            </span>
+          </div>
+        )}
+        
+        {!isMobile && swipeDirection && (
           <div className={cn(styles.swipeIndicator, styles[`indicator${swipeDirection === 'right' ? 'Right' : 'Left'}`])}>
             {swipeDirection === 'right' ? '✓' : '✗'}
           </div>

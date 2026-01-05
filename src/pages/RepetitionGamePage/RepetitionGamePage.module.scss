@@ -67,9 +67,19 @@
 
   .gameArea {
     padding: var(--spacing-md);
+    touch-action: pan-y pinch-zoom;
+    
+    :global(body.dragging) & {
+      overflow: hidden;
+      touch-action: none;
+    }
   }
 
   .cardSection {
-    gap: var(--spacing-lg);
+    gap: var(--spacing-md);
+  }
+  
+  .cardContainer {
+    min-height: 240px;
   }
 }

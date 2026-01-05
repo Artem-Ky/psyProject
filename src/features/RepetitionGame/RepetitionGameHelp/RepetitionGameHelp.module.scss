@@ -1,5 +1,7 @@
 .content {
   color: var(--text-color);
+  overflow-x: hidden;
+  width: 100%;
 }
 
 .section {
@@ -41,6 +43,7 @@
   padding: var(--spacing-md);
   background-color: rgba(0, 0, 0, 0.05);
   border-radius: var(--radius-md);
+  overflow: hidden;
 }
 
 .instructionText {
@@ -53,7 +56,9 @@
 .cardDemo {
   display: flex;
   align-items: center;
+  justify-content: center;
   gap: var(--spacing-md);
+  flex-wrap: wrap;
 }
 
 .cardDemoInner {
