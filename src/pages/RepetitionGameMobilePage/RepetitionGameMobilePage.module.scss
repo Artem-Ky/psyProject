@@ -1,0 +1,53 @@
+.page {
+  position: fixed;
+  inset: 0;
+  display: flex;
+  flex-direction: column;
+  background-color: var(--bg-color);
+  overflow: hidden;
+}
+
+.header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: var(--spacing-sm) var(--spacing-md);
+  border-bottom: 1px solid var(--text-secondary);
+  flex-shrink: 0;
+}
+
+.content {
+  flex: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: var(--spacing-md);
+  overflow: hidden;
+}
+
+.gameContainer {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: var(--spacing-lg);
+}
+
+.cardArea {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  touch-action: none;
+  width: calc(100vw - 32px);
+  max-width: 350px;
+  height: 220px;
+  flex-shrink: 0;
+}
+
+.buttons {
+  display: flex;
+  gap: var(--spacing-xl);
+}
+
+.answerButton {
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+}

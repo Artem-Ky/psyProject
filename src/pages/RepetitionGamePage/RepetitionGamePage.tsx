@@ -1,5 +1,6 @@
 import { useEffect, useCallback, useState } from 'react'
-import { DndContext, type DragEndEvent, useSensor, useSensors, PointerSensor, TouchSensor, type DragStartEvent } from '@dnd-kit/core'
+import { useNavigate } from 'react-router-dom'
+import { DndContext, type DragEndEvent, useSensor, useSensors, PointerSensor } from '@dnd-kit/core'
 import { isMobile } from 'react-device-detect'
 import { useAppDispatch, useAppSelector } from '@app/store/hooks'
 import {
@@ -41,7 +42,10 @@ const topicData: Record<string, Term[]> = {
   motivation: convertToTerms(motivationTerms),
 }
 
+const STORAGE_KEY = 'repetitionGame_selectedTopic'
+
 export const RepetitionGamePage = () => {
+  const navigate = useNavigate()
   const dispatch = useAppDispatch()
   const [isDragging, setIsDragging] = useState(false)
   const {
@@ -59,26 +63,8 @@ export const RepetitionGamePage = () => {
       activationConstraint: {
         distance: 10,
       },
-    }),
-    useSensor(TouchSensor, {
-      activationConstraint: {
-        delay: 0,
-        tolerance: 5,
-      },
     })
   )
-
-  const handleDragStart = useCallback((_event: DragStartEvent) => {
-    if (isMobile) {
-      document.body.classList.add('dragging')
-    }
-  }, [])
-
-  const handleDragCancel = useCallback(() => {
-    if (isMobile) {
-      document.body.classList.remove('dragging')
-    }
-  }, [])
 
   const currentTerm = terms[currentIndex]
   const totalTerms = terms.length
@@ -86,6 +72,7 @@ export const RepetitionGamePage = () => {
   const handleSelectTopic = useCallback((topicId: string) => {
     const termsForTopic = topicData[topicId]
     if (termsForTopic) {
+      localStorage.setItem(STORAGE_KEY, topicId)
       const shuffled = [...termsForTopic].sort(() => Math.random() - 0.5)
       dispatch(setTopic({ topic: topicId, terms: shuffled }))
     }
@@ -114,16 +101,11 @@ export const RepetitionGamePage = () => {
   }
 
   const handleDragEnd = useCallback((event: DragEndEvent) => {
-    if (isMobile) {
-      document.body.classList.remove('dragging')
-    }
-    
     const { delta } = event
-    const threshold = isMobile ? 80 : 100
     
-    if (delta.x > threshold) {
+    if (delta.x > 100) {
       handleCorrect()
-    } else if (delta.x < -threshold) {
+    } else if (delta.x < -100) {
       handleIncorrect()
     }
   }, [handleCorrect, handleIncorrect])
@@ -132,11 +114,55 @@ export const RepetitionGamePage = () => {
     console.log(answer) // TODO: написать алгоритм распознавания синонимов
   }
 
+  const handleStartGame = () => {
+    navigate('/game/repetition/mobile')
+  }
+
   useEffect(() => {
     if (!currentTopic && topics.length > 0) {
-      handleSelectTopic(topics[0].id)
+      const savedTopic = localStorage.getItem(STORAGE_KEY)
+      const topicToSelect = savedTopic && topicData[savedTopic] ? savedTopic : topics[0].id
+      handleSelectTopic(topicToSelect)
     }
   }, [currentTopic, handleSelectTopic])
+
+  if (isMobile) {
+    return (
+      <div className={styles.page}>
+        <Header />
+        
+        <div className={styles.content}>
+          <TopicSidebar
+            topics={topics}
+            selectedTopic={currentTopic}
+            onSelectTopic={handleSelectTopic}
+          />
+
+          <main className={styles.gameArea}>
+            <div className={styles.mobileStartSection}>
+              <h2 className={styles.mobileTitle}>Повторение</h2>
+              <p className={styles.mobileDescription}>
+                Проверьте свои знания терминов по выбранной теме
+              </p>
+              <p className={styles.mobileStats}>
+                {totalTerms} терминов в теме
+              </p>
+              <Button 
+                variant="primary" 
+                size="lg" 
+                onClick={handleStartGame}
+                className={styles.startButton}
+              >
+                Начать игру
+              </Button>
+            </div>
+          </main>
+        </div>
+
+        <ThemeSwitcher />
+      </div>
+    )
+  }
 
   return (
     <div className={styles.page}>
@@ -160,12 +186,7 @@ export const RepetitionGamePage = () => {
               hasIncorrect={incorrectAnswers.length > 0}
             />
           ) : currentTerm ? (
-            <DndContext 
-              sensors={sensors} 
-              onDragStart={handleDragStart}
-              onDragEnd={handleDragEnd}
-              onDragCancel={handleDragCancel}
-            >
+            <DndContext sensors={sensors} onDragEnd={handleDragEnd}>
               <div className={styles.gameHeader}>
                 <RepetitionGameHelp />
                 <ProgressCounter
